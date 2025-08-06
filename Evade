@@ -1,4 +1,6 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImamGV/CompKiller/refs/heads/main/Source"))()
+local LibraryESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/RGV-devid/Scripts/refs/heads/main/ESP"))()
+
 
 local Notifier = Library.newNotify()
 
@@ -94,9 +96,9 @@ Section.Farm:AddToggle({
 	Callback = function(v)
 if v then
 TicketsFarm = game:GetService("RunService").RenderStepped:Connect(function()
-for i, v in next, workspace.Game.Effects.Tickets:GetChildren() do
-if v:IsA("BasePart") and v.Name == "HumanoidRootPart" then
-game.Players.LocalPlayer.Character.HumanoidRootPart.Position = v.Position - Vector3.new(0, -5, 0)
+for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
+if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
 end
 end
 end)
@@ -118,7 +120,7 @@ end
 end
 end
 for i, v in ipairs(workspace.Game.Players:GetChildren()) do
-if v:GetAttribute('Downed') and not v.Name == game.Players.LocalPlayer.Name then
+if v:GetAttribute('Downed') then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.HumanoidRootPart.Position) - Vector3.new(0,5,0)
 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Character"):WaitForChild("Interact"):FireServer("Revive", true, v.Name)
 end
@@ -205,7 +207,7 @@ Section.Players:AddToggle({
 	Name = "Always Respawn",
 	Default = false,
 	Callback = function(v)
-_G.AutoRespawn = value
+_G.AutoRespawn = v
 while _G.AutoRespawn do wait(0.5)
 if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed') then
 game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
@@ -216,6 +218,109 @@ Section.Players:AddButton({
 	Name = "Respawn",
 	Callback = function()
 game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
+end})
+
+Section.Miscellaneous:AddToggle({
+	Name = "Show Round Time",
+	Default = false,
+	Callback = function(v)
+if v then
+local ScreenGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+ScreenGui.Name = "RoundTimerScreen"
+ScreenGui.ResetOnSpawn = false
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Position = UDim2.new(0.425,0,0.1,0)
+Frame.BackgroundColor3 = Color3.new(0,0,0)
+Frame.BackgroundTransparency = 0.75
+Frame.Size = UDim2.new(0.15,0,0.1,0)
+local ImageLabel = Instance.new("TextLabel", Frame)
+ImageLabel.Position = UDim2.new(0.5,0,0.4,0)
+ImageLabel.BackgroundColor3 = Color3.new(0,0,0)
+ImageLabel.BackgroundTransparency = 0.75
+ImageLabel.Size = UDim2.new(0,0,0,0)
+ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
+ImageLabel.TextSize = "14"
+ImageLabel.Font = "Roboto"
+ImageLabel.TextColor3 = Color3.new(1,1,1)
+local UiCorner = Instance.new("UICorner", Frame)
+local UiStroke = Instance.new("UIStroke", Frame)
+UiStroke.Color = Color3.fromRGB(0,255,255)
+UiStroke.Thickness = 2
+game:GetService("RunService").RenderStepped:Connect(function()
+ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
+end)
+else
+for _,v in pairs(game.Players:GetDescendants()) do
+if v.Name == "RoundTimerScreen" then
+v:Destroy()
+end
+end
+end
+end})
+Section.Miscellaneous:AddToggle({
+	Name = "Show Playtime",
+	Default = false,
+	Callback = function(v)
+if v then
+local ScreenGui = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer.PlayerGui)
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Name = "AFKScreen"
+local ImageLabel = Instance.new("TextLabel", ScreenGui)
+ImageLabel.Position = UDim2.new(0,0,0,0)
+ImageLabel.BackgroundColor3 = Color3.fromRGB(0,255,255)
+ImageLabel.BackgroundTransparency = 0.5
+ImageLabel.Size = UDim2.new(1,0,1,0)
+ImageLabel.Text = "Playtime:" .. workspace.DistributedGameTime
+ImageLabel.TextSize = "50"
+ImageLabel.Font = "RobotoMono"
+ImageLabel.TextColor3 = Color3.new(1,1,1)
+game:GetService("RunService").RenderStepped:Connect(function()
+ImageLabel.Text = string.format("%s%1.f", "Playtime:",workspace.DistributedGameTime)
+end)
+else
+for _,v in pairs(game.Players:GetDescendants()) do
+if v.Name == "AFKScreen" then
+v:Destroy()
+end
+end
+end
+end})
+Section.Miscellaneous:AddToggle({
+	Name = "Hide All Gui",
+	Default = false,
+	Callback = function(v)
+_G.HideAllUI = value
+while _G.HideAllUI do wait()
+if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Shared") then
+game:GetService("Players").LocalPlayer.PlayerGui.Shared.Enabled = not _G.HideAllUI
+end
+if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Menu") then
+game:GetService("Players").LocalPlayer.PlayerGui.Menu.Enabled = not _G.HideAllUI
+end
+end
+end})
+
+Section.Visual:AddToggle({
+	Name = "Bot ESP",
+	Default = false,
+	Callback = function(v)
+if v then
+for i, v in pairs(workspace.Game.Players:GetChildren()) do
+if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
+LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+end
+end
+NextbotsESP = workspace.Game.Players.ChildAdded:Connect(function(v)
+for i, v in pairs(workspace.Game.Players:GetChildren()) do
+if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
+LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+end
+end
+end)
+else
+NextbotsESP:Disconnect()
+LibraryESP:Delete("Nextbots_ESP")
+end
 end})
 
 local Settings = Tabs.Setting:DrawSection({
