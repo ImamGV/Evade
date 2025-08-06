@@ -204,6 +204,15 @@ CanWalk:Disconnect()
 end
 end})
 Section.Players:AddToggle({
+	Name = "Always Whistle",
+	Default = false,
+	Callback = function(v)
+_G.AutoWhistle = v
+while _G.AutoWhistle do wait()
+game:GetService("ReplicatedStorage").Events.Character.Whistle:FireServer(true)
+end
+end})
+Section.Players:AddToggle({
 	Name = "Always Respawn",
 	Default = false,
 	Callback = function(v)
@@ -240,7 +249,7 @@ ImageLabel.BackgroundTransparency = 0.75
 ImageLabel.Size = UDim2.new(0,0,0,0)
 ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
 ImageLabel.TextSize = "14"
-ImageLabel.Font = "Roboto"
+ImageLabel.Font = "RobotoMono"
 ImageLabel.TextColor3 = Color3.new(1,1,1)
 local UiCorner = Instance.new("UICorner", Frame)
 local UiStroke = Instance.new("UIStroke", Frame)
