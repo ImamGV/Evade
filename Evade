@@ -47,8 +47,8 @@ local PlaceID = Watermark:AddText({
 })
 
 local Tabs = {
-Main = Window:DrawTab({Name = "Main Tab", Icon = "apple", EnableScrolling = true}),
-Setting = Window:DrawTab({Name = "Settings Tab", Icon = "settings-3", EnableScrolling = true}),
+Main = Window:DrawTab({Name = "Main Tab", Type = "Single", Icon = "apple", EnableScrolling = true}),
+Setting = Window:DrawTab({Name = "Settings Tab", Type = "Single", Icon = "settings-3", EnableScrolling = true}),
 }
 
 local Section = {
@@ -59,7 +59,7 @@ Visual = Tabs.Main:DrawSection({Name = "Visual"}),
 }
 local _Part = Instance.new("Part", workspace)
    _Part.Anchored = true
-   _Part.CFrame = CFrame(100,0,100)
+   _Part.CFrame = CFrame.new(100,0,100)
    _Part.Material = "Plastic"
    _Part.Transparency = 0
    _Part.Size = Vector3.new(5,1.2,5)
@@ -69,7 +69,7 @@ Section.Farm:AddSlider({
 	Min = 1000,
 	Max = 3000,
 	Default = 1000,
-	Round = 1,
+	Round = 0,
 	Callback = function(v)
 _G.HeightFarm = v
 end})
@@ -85,6 +85,7 @@ _Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,5,0)
 end)
 else
 AFKFarm:Disconnect()
+game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = CFrame.new(0, -10000, 0)
 end
 end})
 Section.Farm:AddToggle({
@@ -128,7 +129,94 @@ CashFarm:Disconnect()
 end
 end})
 
+Section.Players:AddSlider({
+	Name = "Fly Speed",
+	Min = 50,
+	Max = 300,
+	Default = 50,
+	Round = 0,
+	Callback = function(v)
+_G.FlySpeed = v
+end})
+Section.Players:AddToggle({
+	Name = "Enabled Fly",
+	Default = false,
+	Callback = function(v)
+_G.Fly = v
+if _G.Fly == false then
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler:Destroy()
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler:Destroy()
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = false
+end
+end
+while _G.Fly do
+if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.MaxForce = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.MaxTorque = Vector3.new(9e9,9e9,9e9)
+game.Players.LocalPlayer.Character.Humanoid.PlatformStand = true
+game.Players.LocalPlayer.Character.HumanoidRootPart.GyroHandler.CFrame = Workspace.CurrentCamera.CoordinateFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = Vector3.new()
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.FlySpeed)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity + game.Workspace.CurrentCamera.CFrame.RightVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().X * _G.FlySpeed)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z > 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.FlySpeed)
+end
+if require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z < 0 then
+game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity = game.Players.LocalPlayer.Character.HumanoidRootPart.VelocityHandler.Velocity - game.Workspace.CurrentCamera.CFrame.LookVector * (require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule")):GetMoveVector().Z * _G.FlySpeed)
+end
+elseif game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid") and game.Players.LocalPlayer.Character.Humanoid.RootPart and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("VelocityHandler") == nil and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("GyroHandler") == nil then
+local bv = Instance.new("BodyVelocity")
+local bg = Instance.new("BodyGyro")
 
+bv.Name = "VelocityHandler"
+bv.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bv.MaxForce = Vector3.new(0,0,0)
+bv.Velocity = Vector3.new(0,0,0)
+
+bg.Name = "GyroHandler"
+bg.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+bg.MaxTorque = Vector3.new(0,0,0)
+bg.P = 1000
+bg.D = 50
+end
+task.wait()
+end
+end})
+Section.Players:AddToggle({
+	Name = "Always Can Walk",
+	Default = false,
+	Callback = function(v)
+if v then
+CanWalk = game:GetService("RunService").RenderStepped:Connect(function()
+if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed')==true then
+workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):SetAttribute('Downed', false)
+end
+end)
+else
+CanWalk:Disconnect()
+end
+end})
+Section.Players:AddToggle({
+	Name = "Always Respawn",
+	Default = false,
+	Callback = function(v)
+_G.AutoRespawn = value
+while _G.AutoRespawn do wait(0.5)
+if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed') then
+game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
+end
+end
+end})
+Section.Players:AddButton({
+	Name = "Respawn",
+	Callback = function()
+game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
+end})
 
 local Settings = Tabs.Setting:DrawSection({
 	Name = "UI Settings",
