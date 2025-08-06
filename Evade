@@ -1,1 +1,235 @@
-# Evade
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImamGV/CompKiller/refs/heads/main/Source"))()
+
+local Notifier = Library.newNotify()
+
+local ConfigManager = Library:ConfigManager({
+	Directory = "Evade-UI",
+	Config = "Evade-Configs"
+})
+
+Library:Loader("rbxassetid://95073582077930" , 2.5).yield()
+
+local Window = Library:AddWindow({
+	Name = "Evade",
+	Keybind = "LeftAlt",
+	Logo = "rbxassetid://95073582077930",
+	Scale = Library.Scale.Window,
+	TextSize = 15,
+})
+
+local Watermark = Window:Watermark();
+
+local User = Watermark:AddText({
+	Icon = "User",
+	Text = game.Players.LocalPlayer.Name,
+})
+
+local Clock = Watermark:AddText({
+	Icon = "Clock",
+	Text = Library:GetDate(),
+})
+
+local Time = Watermark:AddText({
+	Icon = "Time",
+	Text = "...",
+})
+
+task.spawn(function()
+	while true do task.wait()
+		Time:SetText(Library:GetTimeNow())
+    Clock:SetText(Library:GetDate())
+	end
+end)
+
+local PlaceID = Watermark:AddText({
+	Icon = "Place ID",
+	Text = game.PlaceId,
+})
+
+local Tabs = {
+Main = Window:DrawTab({Name = "Main Tab", Icon = "apple", EnableScrolling = true}),
+Setting = Window:DrawTab({Name = "Settings Tab", Icon = "settings-3", EnableScrolling = true})
+}
+
+local Settings = SettingTab:DrawSection({
+	Name = "UI Settings",
+});
+
+Settings:AddToggle({
+	Name = "Alway Show Frame",
+	Default = false,
+	Callback = function(v)
+		Window.AlwayShowTab = v;
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Highlight",
+	Default = Library.Colors.Highlight,
+	Callback = function(v)
+		Library.Colors.Highlight = v;
+		Library:RefreshCurrentColor();
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Toggle Color",
+	Default = Library.Colors.Toggle,
+	Callback = function(v)
+		Library.Colors.Toggle = v;
+		
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Drop Color",
+	Default = Library.Colors.DropColor,
+	Callback = function(v)
+		Library.Colors.DropColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Risky",
+	Default = Library.Colors.Risky,
+	Callback = function(v)
+		Library.Colors.Risky = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Mouse Enter",
+	Default = Library.Colors.MouseEnter,
+	Callback = function(v)
+		Library.Colors.MouseEnter = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Block Color",
+	Default = Library.Colors.BlockColor,
+	Callback = function(v)
+		Library.Colors.BlockColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Background Color",
+	Default = Library.Colors.BGDBColor,
+	Callback = function(v)
+		Library.Colors.BGDBColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Block Background Color",
+	Default = Library.Colors.BlockBackground,
+	Callback = function(v)
+		Library.Colors.BlockBackground = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Stroke Color",
+	Default = Library.Colors.StrokeColor,
+	Callback = function(v)
+		Compkiller.Colors.StrokeColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "High Stroke Color",
+	Default = Library.Colors.HighStrokeColor,
+	Callback = function(v)
+		Library.Colors.HighStrokeColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Switch Color",
+	Default = Library.Colors.SwitchColor,
+	Callback = function(v)
+		Library.Colors.SwitchColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+Settings:AddColorPicker({
+	Name = "Line Color",
+	Default = Library.Colors.LineColor,
+	Callback = function(v)
+		Library.Colors.LineColor = v;
+
+		Library:RefreshCurrentColor(v);
+	end,
+});
+
+ThemeTab:DrawSection({
+	Name = "UI Themes"
+}):AddDropdown({
+	Name = "Select Theme",
+	Default = "Default",
+	Values = {
+		"Default",
+		"Dark Green",
+		"Dark Blue",
+		"Purple Rose",
+		"Skeet"
+	},
+	Callback = function(v)
+		Library:SetTheme(v)
+	end
+})
+
+-- Creating Config Tab --
+local ConfigUI = Window:DrawConfig({
+	Name = "Config",
+	Icon = "folder",
+	Config = ConfigManager
+});
+
+ConfigUI:Init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
