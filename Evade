@@ -51,7 +51,86 @@ Main = Window:DrawTab({Name = "Main Tab", Icon = "apple", EnableScrolling = true
 Setting = Window:DrawTab({Name = "Settings Tab", Icon = "settings-3", EnableScrolling = true})
 }
 
-local Settings = SettingTab:DrawSection({
+local Section = {
+Farm = Tabs.Main:DrawSection({Name = "Farm", Position = 'left'}),
+Players = Tabs.Main:DrawSection({Name = "Players", Position = 'left'}),
+Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous", Position = 'left'}),
+Visual = Tabs.Main:DrawSection({Name = "Visual", Position = 'left'})
+}
+local _Part = Instance.new("Part", workspace)
+   _Part.Anchored = true
+   _Part.CFrame = CFrame(100,0,100)
+   _Part.Material = "Plastic"
+   _Part.Transparency = 0
+   _Part.Size = Vector3.new(5,1.2,5)
+
+Section.Farm:AddSlider({
+	Name = "Height Farm",
+	Min = 1000,
+	Max = 3000,
+	Default = 1000,
+	Round = 0,
+	Callback = function(v)
+_G.HeightFarm = v
+end})
+_G.HeightFarm = "1000"
+Section.Farm:AddToggle({
+	Name = "AFK Farm [BETA]",
+	Default = false,
+	Callback = function(v)
+if v then
+AFKFarm = game:GetService("RunService").RenderStepped:Connect(function()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, _G.HeightFarm, 100)
+_Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,5,0)
+end)
+else
+AFKFarm:Disconnect()
+end
+end})
+Section.Farm:AddToggle({
+	Name = "Tickets Farm [BETA]",
+	Default = false,
+	Callback = function(v)
+if v then
+TicketsFarm = game:GetService("RunService").RenderStepped:Connect(function()
+for i, v in next, workspace.Game.Effects.Tickets:GetChildren() do
+if v:IsA("BasePart") and v.Name == "HumanoidRootPart" then
+game.Players.LocalPlayer.Character.HumanoidRootPart.Position = v.Position - Vector3.new(0, -5, 0)
+end
+end
+end)
+else
+TicketsFarm:Disconnect()
+end
+end})
+Section.Farm:AddToggle({
+	Name = "Cash Farm",
+	Default = false,
+	Callback = function(v)
+if v then
+CashFarm = game:GetService("RunService").Stepped:Connect(function()
+if game.Players.LocalPlayer and game.Players.LocalPlayer.Character then
+for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
+end
+for i, v in ipairs(workspace.Game.Players:GetChildren()) do
+if v:GetAttribute('Downed') and not v.Name == game.Players.LocalPlayer.Name then
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.HumanoidRootPart.Position) - Vector3.new(0,5,0)
+game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Character"):WaitForChild("Interact"):FireServer("Revive", true, v.Name)
+end
+end
+end)
+else
+CashFarm:Disconnect()
+end
+end})
+
+
+
+local Settings = Tabs.Setting:DrawSection({
 	Name = "UI Settings",
 });
 
