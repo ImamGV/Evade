@@ -37,7 +37,7 @@ local Time = Watermark:AddText({
 task.spawn(function()
 	while true do task.wait()
 		Time:SetText(Library:GetTimeNow())
-    Clock:SetText(Library:GetDate())
+                Clock:SetText(Library:GetDate())
 	end
 end)
 
@@ -48,14 +48,14 @@ local PlaceID = Watermark:AddText({
 
 local Tabs = {
 Main = Window:DrawTab({Name = "Main Tab", Icon = "apple", EnableScrolling = true}),
-Setting = Window:DrawTab({Name = "Settings Tab", Icon = "settings-3", EnableScrolling = true})
+Setting = Window:DrawTab({Name = "Settings Tab", Icon = "settings-3", EnableScrolling = true}),
 }
 
 local Section = {
-Farm = Tabs.Main:DrawSection({Name = "Farm", Position = 'left'}),
-Players = Tabs.Main:DrawSection({Name = "Players", Position = 'left'}),
-Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous", Position = 'left'}),
-Visual = Tabs.Main:DrawSection({Name = "Visual", Position = 'left'})
+Farm = Tabs.Main:DrawSection({Name = "Farm"}),
+Players = Tabs.Main:DrawSection({Name = "Players"}),
+Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous"}),
+Visual = Tabs.Main:DrawSection({Name = "Visual"}),
 }
 local _Part = Instance.new("Part", workspace)
    _Part.Anchored = true
@@ -69,7 +69,7 @@ Section.Farm:AddSlider({
 	Min = 1000,
 	Max = 3000,
 	Default = 1000,
-	Round = 0,
+	Round = 1,
 	Callback = function(v)
 _G.HeightFarm = v
 end})
