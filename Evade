@@ -7,9 +7,6 @@ game:GetService("RunService").RenderStepped:Connect(function()
 if not getgenv().RainbowESP then
 Tracer.Color = Color
 end
-if getgenv().RainbowESP then
-Tracer.Color = Color3.fromHSV(tick() % 10 / 10, 1, 1)
-end
 if getgenv().TracerESP and target.Parent ~= nil then
 local camera = workspace.CurrentCamera
 local vector, onScreen = camera:WorldToViewportPoint(target:IsA("Model") and target:GetPivot().Position or target:IsA("BasePart") and target.Position)
@@ -20,8 +17,6 @@ Tracer.Visible = true
 else
 Tracer.Visible = false
 end
-else
-Tracer.Visible = false
 end
 end)
 end
@@ -381,7 +376,7 @@ LibraryESP:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
 Tracer(v, Color3.fromRGB(255,127.5,0))
 end
 end
-TicketESP = workspace.Game.Effects.Tickets:Connect(function(v)
+TicketESP = workspace.Game.Effects.Tickets.ChildAdded:Connect(function(v)
 for _,v in ipairs(workspace.Game.Effects.Tickets:GetDescendants()) do
 if v.Parent.Name == "Tickets" then
 LibraryESP:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
@@ -405,12 +400,6 @@ Section.SettingESP:AddToggle({
 	Default = false,
 	Callback = function(v)
 getgenv().DistanceESP = v
-end})
-Section.SettingESP:AddToggle({
-	Name = "Rainbow ESP",
-	Default = false,
-	Callback = function(v)
-getgenv().RainbowESP = v
 end})
 Section.SettingESP:AddSlider({
 	Name = "Fill Transparency",
