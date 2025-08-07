@@ -354,14 +354,14 @@ Section.Visual:AddToggle({
 	Default = false,
 	Callback = function(v)
 if v then
-for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
-if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
+for _,v in ipairs(workspace.Game.Effects.Tickets:GetDescendants()) do
+if v.Parent.Name == "Tickets" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
 end
 end
 TicketESP = workspace.Game.Effects.Tickets:Connect(function(v)
-for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
-if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
+for _,v in ipairs(workspace.Game.Effects.Tickets:GetDescendants()) do
+if v.Parent.Name == "Tickets" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
 end
 end
