@@ -1,7 +1,25 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/ImamGV/CompKiller/refs/heads/main/Source"))()
 local LibraryESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/RGV-devid/Scripts/refs/heads/main/ESP"))()
 
-
+local function Tracer(target, color)
+local Tracer = Drawing.new("Line")
+Tracer.Color = color
+game:GetService("RunService").RenderStepped:Connect(function()
+if getgenv().TracerESP and target.Parent ~= nil then
+local camera = workspace.CurrentCamera
+local vector, onScreen = camera:WorldToViewportPoint(target:IsA("Model") and target:GetPivot().Position or target:IsA("BasePart") and target.Position)
+if onScreen then
+Tracer.From = Vector2.new(camera.ViewportSize.X / 2, camera.ViewportSize.Y / 1)
+Tracer.To = Vector2.new(vector.X, vector.Y)
+Tracer.Visible = true
+else
+Tracer.Visible = false
+end
+else
+Tracer.Visible = false
+end
+end)
+end
 local Notifier = Library.newNotify()
 
 local ConfigManager = Library:ConfigManager({
@@ -58,6 +76,7 @@ Farm = Tabs.Main:DrawSection({Name = "Farm", Position = "left"}),
 Players = Tabs.Main:DrawSection({Name = "Players", Position = "left"}),
 Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous", Position = "right"}),
 Visual = Tabs.Main:DrawSection({Name = "Visual", Position = "right"}),
+SettingESP = Tabs.Main:DrawSection({Name = "Setting ESP", Position = "right"}),
 }
 local _Part = Instance.new("Part", workspace)
    _Part.Anchored = true
@@ -335,12 +354,14 @@ if v then
 for i, v in pairs(workspace.Game.Players:GetChildren()) do
 if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
 LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+Tracer(v, Color3.new(1))
 end
 end
 NextbotsESP = workspace.Game.Players.ChildAdded:Connect(function(v)
 for i, v in pairs(workspace.Game.Players:GetChildren()) do
 if not game.Players:FindFirstChild(v.Name) and not v:FindFirstChild("Nextbots_ESP") then
 LibraryESP:AddESP(v, v.Name, Color3.fromRGB(255,0,0), 14, "Nextbots_ESP")
+Tracer(v, Color3.new(1))
 end
 end
 end)
@@ -357,12 +378,14 @@ if v then
 for _,v in ipairs(workspace.Game.Effects.Tickets:GetDescendants()) do
 if v.Parent.Name == "Tickets" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
+Tracer(v, Color3.fromRGB(255,127.5,0))
 end
 end
 TicketESP = workspace.Game.Effects.Tickets:Connect(function(v)
 for _,v in ipairs(workspace.Game.Effects.Tickets:GetDescendants()) do
 if v.Parent.Name == "Tickets" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
+Tracer(v, Color3.fromRGB(255,127.5,0))
 end
 end
 end)
@@ -371,6 +394,13 @@ TicketESP:Disconnect()
 LibraryESP:Delete("Ticket_ESP")
 end
 end})
+Section.SettingESP:AddToggle({
+	Name = "Tracer ESP",
+	Default = false,
+	Callback = function(v)
+getgenv().TracerESP = v
+end})
+
 local Settings = Tabs.Setting:DrawSection({
 	Name = "UI Settings",
 });
