@@ -68,22 +68,22 @@ local _Part = Instance.new("Part", workspace)
 
 Section.Farm:AddSlider({
 	Name = "Height Farm",
-	Min = 1000,
+	Min = 500,
 	Max = 3000,
-	Default = 1000,
+	Default = 500,
 	Round = 0,
 	Callback = function(v)
 _G.HeightFarm = v
 end})
-_G.HeightFarm = "1000"
+_G.HeightFarm = "500"
 Section.Farm:AddToggle({
-	Name = "AFK Farm [BETA]",
+	Name = "AFK Farm",
 	Default = false,
 	Callback = function(v)
 if v then
 AFKFarm = game:GetService("RunService").RenderStepped:Connect(function()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, _G.HeightFarm, 100)
-_Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,5,0)
+_Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,4,0)
 end)
 else
 AFKFarm:Disconnect()
@@ -91,7 +91,7 @@ game.Players.LocalPlayer.Character:FindFirstChild('HumanoidRootPart').CFrame = C
 end
 end})
 Section.Farm:AddToggle({
-	Name = "Tickets Farm [BETA]",
+	Name = "Tickets Farm",
 	Default = false,
 	Callback = function(v)
 if v then
@@ -298,7 +298,7 @@ Section.Miscellaneous:AddToggle({
 	Name = "Hide All Gui",
 	Default = false,
 	Callback = function(v)
-_G.HideAllUI = value
+_G.HideAllUI = v
 while _G.HideAllUI do wait()
 if game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Shared") then
 game:GetService("Players").LocalPlayer.PlayerGui.Shared.Enabled = not _G.HideAllUI
@@ -331,7 +331,28 @@ NextbotsESP:Disconnect()
 LibraryESP:Delete("Nextbots_ESP")
 end
 end})
-
+Section.Visual:AddToggle({
+	Name = "Tickets ESP",
+	Default = false,
+	Callback = function(v)
+if v then
+for i, v in pairs(workspace.Game.Effects.Tickets:GetDescendants() do
+if v.Parent.Name == "Tickets" then
+Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
+end
+end
+TicketESP = workspace.Game.Players.ChildAdded:Connect(function(v)
+for i, v in pairs(workspace.Game.Effects.Tickets:GetDescendants() do
+if v.Parent.Name == "Tickets" then
+Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
+end
+end
+end)
+else
+TicketESP:Disconnect()
+LibraryESP:Delete("Ticket_ESP")
+end
+end})
 local Settings = Tabs.Setting:DrawSection({
 	Name = "UI Settings",
 });
