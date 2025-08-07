@@ -241,20 +241,24 @@ Section.Players:AddToggle({
 	Default = false,
 	Callback = function(v)
 _G.AutoWhistle = v
-while _G.AutoWhistle do wait()
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoWhistle then
 game:GetService("ReplicatedStorage").Events.Character.Whistle:FireServer(true)
 end
+end)
 end})
 Section.Players:AddToggle({
 	Name = "Always Respawn",
 	Default = false,
 	Callback = function(v)
 _G.AutoRespawn = v
-while _G.AutoRespawn do wait(0.5)
+game:GetService("RunService").RenderStepped:Connect(function()
+if _G.AutoRespawn then
 if workspace.Game.Players:WaitForChild(game.Players.LocalPlayer.Name):GetAttribute('Downed') then
 game:GetService("ReplicatedStorage").Events.Player.ChangePlayerMode:FireServer(true)
 end
 end
+end)
 end})
 Section.Players:AddButton({
 	Name = "Respawn",
