@@ -82,8 +82,13 @@ Section.Farm:AddToggle({
 	Callback = function(v)
 if v then
 AFKFarm = game:GetService("RunService").RenderStepped:Connect(function()
+for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, _G.HeightFarm, 100)
-_Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,4,0)
+_Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,3.5,0)
 end)
 else
 AFKFarm:Disconnect()
@@ -96,6 +101,11 @@ Section.Farm:AddToggle({
 	Callback = function(v)
 if v then
 TicketsFarm = game:GetService("RunService").RenderStepped:Connect(function()
+for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+if part:IsA("BasePart") then
+part.CanCollide = false
+end
+end
 for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
 if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
@@ -111,6 +121,12 @@ Section.Farm:AddToggle({
 	Default = false,
 	Callback = function(v)
 if v then
+local _Part2 = Instance.new("Part", workspace)
+   _Part2.Anchored = true
+   _Part2.CFrame = CFrame.new(0,0,0)
+   _Part2.Material = "Plastic"
+   _Part2.Transparency = 0
+   _Part2.Size = Vector3.new(5,1.2,5)
 CashFarm = game:GetService("RunService").Stepped:Connect(function()
 if game.Players.LocalPlayer and game.Players.LocalPlayer.Character then
 for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
@@ -121,6 +137,7 @@ end
 end
 for i, v in ipairs(workspace.Game.Players:GetChildren()) do
 if v:GetAttribute('Downed') then
+_Part2.CFrame = v.HumanoidRootPart.CFrame - Vector3.new(0,3.5,0)
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.HumanoidRootPart.Position) - Vector3.new(0,5,0)
 game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("Character"):WaitForChild("Interact"):FireServer("Revive", true, v.Name)
 end
