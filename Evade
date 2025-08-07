@@ -4,9 +4,7 @@ local LibraryESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/RG
 local function Tracer(target, color)
 local Tracer = Drawing.new("Line")
 game:GetService("RunService").RenderStepped:Connect(function()
-if not getgenv().RainbowESP then
 Tracer.Color = Color
-end
 if getgenv().TracerESP and target.Parent ~= nil then
 local camera = workspace.CurrentCamera
 local vector, onScreen = camera:WorldToViewportPoint(target:IsA("Model") and target:GetPivot().Position or target:IsA("BasePart") and target.Position)
@@ -32,7 +30,7 @@ Library:Loader("rbxassetid://95073582077930" , 2.5).yield()
 local Window = Library:AddWindow({
 	Name = "Evade",
 	Keybind = "LeftAlt",
-	Logo = "rbxassetid://95073582077930",
+	Logo = "rbxassetid://1038410268",
 	Scale = Library.Scale.Window,
 	TextSize = 15,
 })
@@ -106,7 +104,7 @@ if not _G.TicketFarm and _G.AFKFarm then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, _G.HeightFarm, 100)
 _Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,3.5,0)
 end
-if _G.TicketFarm and _G.AFKFarm and workspace.Game.Effects.Tickets:FindFirstChildWhichIsA("Model") then
+if _G.TicketFarm and _G.AFKFarm and not workspace.Game.Effects.Tickets:FindFirstChildWhichIsA("Model") then
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(100, _G.HeightFarm, 100)
 _Part.CFrame = CFrame.new(100, _G.HeightFarm, 100) - Vector3.new(0,3.5,0)
 end
@@ -133,17 +131,18 @@ else
 TicketsFarm:Disconnect()
 end
 end})
+local _Part2 = Instance.new("Part", workspace)
+   _Part2.Anchored = true
+   _Part2.CFrame = CFrame.new(0,0,0)
+   _Part2.Material = "Plastic"
+   _Part2.Transparency = 1
+   _Part2.Size = Vector3.new(5,1.2,5)
+
 Section.Farm:AddToggle({
 	Name = "Cash Farm",
 	Default = false,
 	Callback = function(v)
 if v then
-local _Part2 = Instance.new("Part", workspace)
-   _Part2.Anchored = true
-   _Part2.CFrame = CFrame.new(0,0,0)
-   _Part2.Material = "Plastic"
-   _Part2.Transparency = 0
-   _Part2.Size = Vector3.new(5,1.2,5)
 CashFarm = game:GetService("RunService").Stepped:Connect(function()
 for i, v in ipairs(workspace.Game.Players:GetChildren()) do
 if v:GetAttribute('Downed') then
@@ -154,7 +153,6 @@ end
 end
 end)
 else
-_Part2:Destroy()
 CashFarm:Disconnect()
 end
 end})
@@ -287,6 +285,9 @@ local UiCorner = Instance.new("UICorner", Frame)
 local UiStroke = Instance.new("UIStroke", Frame)
 UiStroke.Color = Color3.fromRGB(0,255,255)
 UiStroke.Thickness = 2
+local UiStroke2 = Instance.new("UIStroke", ImageLabel)
+UiStroke2.Color = Color3.fromRGB(0,255,255)
+UiStroke2.Thickness = 1.25
 game:GetService("RunService").RenderStepped:Connect(function()
 ImageLabel.Text = "Round Timer:\n" .. workspace.Game.Stats:GetAttribute("Timer") .. "s"
 end)
