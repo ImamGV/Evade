@@ -54,10 +54,10 @@ Setting = Window:DrawTab({Name = "Settings Tab", Type = "Single", Icon = "settin
 }
 
 local Section = {
-Farm = Tabs.Main:DrawSection({Name = "Farm"}),
-Players = Tabs.Main:DrawSection({Name = "Players"}),
-Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous"}),
-Visual = Tabs.Main:DrawSection({Name = "Visual"}),
+Farm = Tabs.Main:DrawSection({Name = "Farm", Position = "left"}),
+Players = Tabs.Main:DrawSection({Name = "Players", Position = "left"}),
+Miscellaneous = Tabs.Main:DrawSection({Name = "Miscellaneous", Position = "right"}),
+Visual = Tabs.Main:DrawSection({Name = "Visual", Position = "right"}),
 }
 local _Part = Instance.new("Part", workspace)
    _Part.Anchored = true
@@ -353,14 +353,14 @@ Section.Visual:AddToggle({
 	Default = false,
 	Callback = function(v)
 if v then
-for i, v in pairs(workspace.Game.Effects.Tickets:GetDescendants() do
-if v.Parent.Name == "Tickets" then
+for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
+if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
 end
 end
-TicketESP = workspace.Game.Players.ChildAdded:Connect(function(v)
-for i, v in pairs(workspace.Game.Effects.Tickets:GetDescendants() do
-if v.Parent.Name == "Tickets" then
+TicketESP = workspace.Game.Effects.Tickets:Connect(function(v)
+for i, v in next, workspace.Game.Effects.Tickets:GetDescendants() do
+if v.IsA(v, "BasePart") and v.Name == "HumanoidRootPart" then
 Library:AddESP(v, "Ticket", Color3.fromRGB(255,127.5,0), 15, "Ticket_ESP")
 end
 end
