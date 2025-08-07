@@ -49,7 +49,7 @@ local PlaceID = Watermark:AddText({
 })
 
 local Tabs = {
-Main = Window:DrawTab({Name = "Main Tab", Type = "Single", Icon = "apple", EnableScrolling = true}),
+Main = Window:DrawTab({Name = "Main Tab", Icon = "apple", EnableScrolling = true}),
 Setting = Window:DrawTab({Name = "Settings Tab", Type = "Single", Icon = "settings-3", EnableScrolling = true}),
 }
 
